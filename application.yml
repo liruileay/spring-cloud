@@ -1,0 +1,39 @@
+server:
+  port: 9000
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://www.s1.com:3000/eureka/,http://www.s2.com:3001/eureka/,http://www.s3.com:3002/eureka/
+  instance:
+    instance-id: zuul-server-1
+    prefer-ip-address: true
+    lease-expiration-duration-in-seconds: 20
+    lease-renewal-interval-in-seconds: 10
+
+spring:
+  application:
+    name: zuul-server
+
+zuul:
+  routes:
+    mypower:
+      serviceId: server-app-eureka-producer
+      path: /pro/**
+    myorder:
+      serviceId: server-app-eureka-customer
+      path: /cus/**
+  host:
+    connect-timeout-millis: 3000
+    connection-request-timeout-millis: 3000
+    socket-timeout-millis: 3000
+  # 防止使用服务id调用
+  ignored-services: '*'
+  prefix: /api
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
